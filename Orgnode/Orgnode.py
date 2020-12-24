@@ -20,6 +20,11 @@
 #  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #  SOFTWARE.
 
+# Edited by Chris E. Mower (chris.mower@ed.ac.uk)
+# December 2020
+# Version 3
+#   Migrate to Python3.
+#   Use multiple of 4 spaces for indentation.
 # Program written by Charles Cave   (charlesweb@optusnet.com.au)
 # February - March 2009
 # Version 2 - June 2009
