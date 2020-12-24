@@ -37,110 +37,110 @@ import re, sys
 import datetime
 
 def makelist(filename):
-   """
-   Read an org-mode file and return a list of Orgnode objects
-   created from this file.
-   """
-   ctr = 0
+    """
+    Read an org-mode file and return a list of Orgnode objects
+    created from this file.
+    """
+    ctr = 0
 
-   try:
-      f = open(filename, 'r')
-   except IOError:
-      print "Unable to open file [%s] " % filename
-      print "Program terminating."
-      sys.exit(1)
+    try:
+        f = open(filename, 'r')
+    except IOError:
+        print("Unable to open file [%s] " % filename)
+        print("Program terminating.")
+        sys.exit(1)
 
-   todos         = dict()  # populated from #+SEQ_TODO line
-   todos['TODO'] = ''   # default values
-   todos['DONE'] = ''   # default values
-   level         = 0
-   heading       = ""
-   bodytext      = ""
-   tag1          = ""      # The first tag enclosed in ::
-   alltags       = []      # list of all tags in headline
-   sched_date    = ''
-   deadline_date = ''
-   nodelist      = []
-   propdict      = dict()
+    todos         = dict()  # populated from #+SEQ_TODO line
+    todos['TODO'] = ''   # default values
+    todos['DONE'] = ''   # default values
+    level         = 0
+    heading       = ""
+    bodytext      = ""
+    tag1          = ""      # The first tag enclosed in ::
+    alltags       = []      # list of all tags in headline
+    sched_date    = ''
+    deadline_date = ''
+    nodelist      = []
+    propdict      = dict()
 
-   for line in f:
-       ctr += 1
-       hdng = re.search('^(\*+)\s(.*?)\s*$', line)
-       if hdng:
-          if heading:  # we are processing a heading line
-             thisNode = Orgnode(level, heading, bodytext, tag1, alltags)
-             if sched_date:
-                thisNode.setScheduled(sched_date)
-                sched_date = ""
-             if deadline_date:
-                thisNode.setDeadline(deadline_date)
-                deadline_date = ''
-             thisNode.setProperties(propdict)
-             nodelist.append( thisNode )
-             propdict = dict()
-          level = hdng.group(1)
-          heading =  hdng.group(2)
-          bodytext = ""
-          tag1 = ""
-          alltags = []       # list of all tags in headline
-          tagsrch = re.search('(.*?)\s*:(.*?):(.*?)$',heading)
-          if tagsrch:
-              heading = tagsrch.group(1)
-              tag1 = tagsrch.group(2)
-              alltags.append(tag1)
-              tag2 = tagsrch.group(3)
-              if tag2:
-                 for t in tag2.split(':'):
-                    if t != '': alltags.append(t)
-       else:      # we are processing a non-heading line
-           if line[:10] == '#+SEQ_TODO':
-              kwlist = re.findall('([A-Z]+)\(', line)
-              for kw in kwlist: todos[kw] = ""
+    for line in f:
+        ctr += 1
+        hdng = re.search('^(\*+)\s(.*?)\s*$', line)
+        if hdng:
+            if heading:  # we are processing a heading line
+                thisNode = Orgnode(level, heading, bodytext, tag1, alltags)
+                if sched_date:
+                    thisNode.setScheduled(sched_date)
+                    sched_date = ""
+                if deadline_date:
+                    thisNode.setDeadline(deadline_date)
+                    deadline_date = ''
+                thisNode.setProperties(propdict)
+                nodelist.append( thisNode )
+                propdict = dict()
+            level = hdng.group(1)
+            heading =  hdng.group(2)
+            bodytext = ""
+            tag1 = ""
+            alltags = []       # list of all tags in headline
+            tagsrch = re.search('(.*?)\s*:(.*?):(.*?)$',heading)
+            if tagsrch:
+                heading = tagsrch.group(1)
+                tag1 = tagsrch.group(2)
+                alltags.append(tag1)
+                tag2 = tagsrch.group(3)
+                if tag2:
+                    for t in tag2.split(':'):
+                        if t != '': alltags.append(t)
+        else:      # we are processing a non-heading line
+            if line[:10] == '#+SEQ_TODO':
+                kwlist = re.findall('([A-Z]+)\(', line)
+                for kw in kwlist: todos[kw] = ""
 
-           if line[:1] != '#':
-               bodytext = bodytext + line
+            if line[:1] != '#':
+                bodytext = bodytext + line
 
-           if re.search(':PROPERTIES:', line): continue
-           if re.search(':END:', line): continue
-           prop_srch = re.search('^\s*:(.*?):\s*(.*?)\s*$', line)
-           if prop_srch:
-              propdict[prop_srch.group(1)] = prop_srch.group(2)
-              continue
-           sd_re = re.search('SCHEDULED:\s+<([0-9]+)\-([0-9]+)\-([0-9]+)', line)
-           if sd_re:
-              sched_date = datetime.date(int(sd_re.group(1)),
-                                         int(sd_re.group(2)),
-                                         int(sd_re.group(3)) )
-           dd_re = re.search('DEADLINE:\s*<(\d+)\-(\d+)\-(\d+)', line)
-           if dd_re:
-              deadline_date = datetime.date(int(dd_re.group(1)),
-                                            int(dd_re.group(2)),
-                                            int(dd_re.group(3)) )
+            if re.search(':PROPERTIES:', line): continue
+            if re.search(':END:', line): continue
+            prop_srch = re.search('^\s*:(.*?):\s*(.*?)\s*$', line)
+            if prop_srch:
+                propdict[prop_srch.group(1)] = prop_srch.group(2)
+                continue
+            sd_re = re.search('SCHEDULED:\s+<([0-9]+)\-([0-9]+)\-([0-9]+)', line)
+            if sd_re:
+                sched_date = datetime.date(int(sd_re.group(1)),
+                                           int(sd_re.group(2)),
+                                           int(sd_re.group(3)) )
+            dd_re = re.search('DEADLINE:\s*<(\d+)\-(\d+)\-(\d+)', line)
+            if dd_re:
+                deadline_date = datetime.date(int(dd_re.group(1)),
+                                              int(dd_re.group(2)),
+                                              int(dd_re.group(3)) )
 
-   # write out last node
-   thisNode = Orgnode(level, heading, bodytext, tag1, alltags)
-   thisNode.setProperties(propdict)
-   if sched_date:
-      thisNode.setScheduled(sched_date)
-   if deadline_date:
-      thisNode.setDeadline(deadline_date)
-   nodelist.append( thisNode )
+    # write out last node
+    thisNode = Orgnode(level, heading, bodytext, tag1, alltags)
+    thisNode.setProperties(propdict)
+    if sched_date:
+        thisNode.setScheduled(sched_date)
+    if deadline_date:
+        thisNode.setDeadline(deadline_date)
+    nodelist.append( thisNode )
 
-   # using the list of TODO keywords found in the file
-   # process the headings searching for TODO keywords
-   for n in nodelist:
-       h = n.Heading()
-       todoSrch = re.search('([A-Z]+)\s(.*?)$', h)
-       if todoSrch:
-           if todos.has_key( todoSrch.group(1) ):
-               n.setHeading( todoSrch.group(2) )
-               n.setTodo ( todoSrch.group(1) )
-       prtysrch = re.search('^\[\#(A|B|C)\] (.*?)$', n.Heading())
-       if prtysrch:
-          n.setPriority(prtysrch.group(1))
-          n.setHeading(prtysrch.group(2))
+    # using the list of TODO keywords found in the file
+    # process the headings searching for TODO keywords
+    for n in nodelist:
+        h = n.Heading()
+        todoSrch = re.search('([A-Z]+)\s(.*?)$', h)
+        if todoSrch:
+            if todoSrch.group(1) in todos:
+                n.setHeading( todoSrch.group(2) )
+                n.setTodo ( todoSrch.group(1) )
+        prtysrch = re.search('^\[\#(A|B|C)\] (.*?)$', n.Heading())
+        if prtysrch:
+            n.setPriority(prtysrch.group(1))
+            n.setHeading(prtysrch.group(2))
 
-   return nodelist
+    return nodelist
 
 ######################
 class Orgnode(object):
@@ -166,7 +166,7 @@ class Orgnode(object):
         self.deadline = ""        # Deadline date
         self.properties = dict()
         for t in alltags:
-           self.tags[t] = ''
+            self.tags[t] = ''
 
         # Look for priority in headline and transfer to prty field
 
@@ -222,7 +222,7 @@ class Orgnode(object):
         Returns a list of all tags
         For example, :HOME:COMPUTER: would return ['HOME', 'COMPUTER']
         """
-        return self.tags.keys()
+        return list(self.tags.keys())
 
     def hasTag(self, srch):
         """
@@ -230,7 +230,7 @@ class Orgnode(object):
         For example, hasTag('COMPUTER') on headling containing
         :HOME:COMPUTER: would return True.
         """
-        return self.tags.has_key(srch)
+        return srch in self.tags
 
     def setTag(self, newtag):
         """
@@ -244,7 +244,7 @@ class Orgnode(object):
         also be stored as if the setTag method was called.
         """
         for t in taglist:
-           self.tags[t] = ''
+            self.tags[t] = ''
 
     def Todo(self):
         """
@@ -304,16 +304,16 @@ class Orgnode(object):
         # This method is not completed yet.
         n = ''
         for i in range(0, self.level):
-           n = n + '*'
+            n = n + '*'
         n = n + ' ' + self.todo + ' '
         if self.prty:
-           n = n +  '[#' + self.prty + '] '
+            n = n +  '[#' + self.prty + '] '
         n = n + self.headline
         n = "%-60s " % n     # hack - tags will start in column 62
         closecolon = ''
-        for t in self.tags.keys():
-           n = n + ':' + t
-           closecolon = ':'
+        for t in list(self.tags.keys()):
+            n = n + ':' + t
+            closecolon = ':'
         n = n + closecolon
 # Need to output Scheduled Date, Deadline Date, property tags The
 # following will output the text used to construct the object
