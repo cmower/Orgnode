@@ -1,5 +1,5 @@
 # Copyright (c) 2010 Charles Cave
-# 
+#
 #  Permission  is  hereby  granted,  free  of charge,  to  any  person
 #  obtaining  a copy  of  this software  and associated  documentation
 #  files   (the  "Software"),   to  deal   in  the   Software  without
@@ -7,10 +7,10 @@
 #  modify, merge, publish,  distribute, sublicense, and/or sell copies
 #  of  the Software, and  to permit  persons to  whom the  Software is
 #  furnished to do so, subject to the following conditions:
-# 
+#
 #  The above copyright notice and this permission notice shall be
 #  included in all copies or substantial portions of the Software.
-# 
+#
 #  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 #  EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 #  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -62,9 +62,9 @@ def makelist(filename):
    deadline_date = ''
    nodelist      = []
    propdict      = dict()
-   
+
    for line in f:
-       ctr += 1     
+       ctr += 1
        hdng = re.search('^(\*+)\s(.*?)\s*$', line)
        if hdng:
           if heading:  # we are processing a heading line
@@ -117,15 +117,15 @@ def makelist(filename):
                                             int(dd_re.group(2)),
                                             int(dd_re.group(3)) )
 
-   # write out last node              
+   # write out last node
    thisNode = Orgnode(level, heading, bodytext, tag1, alltags)
-   thisNode.setProperties(propdict)   
+   thisNode.setProperties(propdict)
    if sched_date:
       thisNode.setScheduled(sched_date)
    if deadline_date:
       thisNode.setDeadline(deadline_date)
    nodelist.append( thisNode )
-              
+
    # using the list of TODO keywords found in the file
    # process the headings searching for TODO keywords
    for n in nodelist:
@@ -139,7 +139,7 @@ def makelist(filename):
        if prtysrch:
           n.setPriority(prtysrch.group(1))
           n.setHeading(prtysrch.group(2))
-                            
+
    return nodelist
 
 ######################
@@ -169,7 +169,7 @@ class Orgnode(object):
            self.tags[t] = ''
 
         # Look for priority in headline and transfer to prty field
-        
+
     def Heading(self):
         """
         Return the Heading text of the node without the TODO tag
@@ -209,7 +209,7 @@ class Orgnode(object):
         Values values are '', 'A', 'B', 'C'
         """
         self.prty = newprty
-    
+
     def Tag(self):
         """
         Returns the value of the first tag.
@@ -219,7 +219,7 @@ class Orgnode(object):
 
     def Tags(self):
         """
-        Returns a list of all tags 
+        Returns a list of all tags
         For example, :HOME:COMPUTER: would return ['HOME', 'COMPUTER']
         """
         return self.tags.keys()
@@ -231,7 +231,7 @@ class Orgnode(object):
         :HOME:COMPUTER: would return True.
         """
         return self.tags.has_key(srch)
-        
+
     def setTag(self, newtag):
         """
         Change the value of the first tag to the supplied string
@@ -245,7 +245,7 @@ class Orgnode(object):
         """
         for t in taglist:
            self.tags[t] = ''
-        
+
     def Todo(self):
         """
         Return the value of the TODO tag
@@ -271,7 +271,7 @@ class Orgnode(object):
         property does not exist.
         """
         return self.properties.get(keyval, "")
-    
+
     def setScheduled(self, dateval):
         """
         Set the scheduled date using the supplied date object
@@ -283,7 +283,7 @@ class Orgnode(object):
         Return the scheduled date object or null if nonexistent
         """
         return self.scheduled
-    
+
     def setDeadline(self, dateval):
         """
         Set the deadline (due) date using the supplied date object
@@ -313,13 +313,10 @@ class Orgnode(object):
         closecolon = ''
         for t in self.tags.keys():
            n = n + ':' + t
-           closecolon = ':'   
+           closecolon = ':'
         n = n + closecolon
 # Need to output Scheduled Date, Deadline Date, property tags The
 # following will output the text used to construct the object
         n = n + "\n" + self.body
-        
+
         return n
-
-
-    
