@@ -1,0 +1,17 @@
+#+TITLE: This is a title
+
+* Header
+
+Some test text.
+
+* TODO [#B] A todo item :tag1:
+
+** Again
+
+* allow
+
+** TODO Another todo
+DEADLINE: <2020-12-25 Fri>
+
+** DONE A closed todo
+CLOSED: [2020-12-24 Thu 12:40]
