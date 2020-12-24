@@ -25,6 +25,9 @@
 # Version 3
 #   Migrate to Python3.
 #   Use multiple of 4 spaces for indentation.
+#   Package'ify Orgnode.
+#   For further development history, see commits in
+#   https://github.com/cmower/Orgnode
 # Program written by Charles Cave   (charlesweb@optusnet.com.au)
 # February - March 2009
 # Version 2 - June 2009
