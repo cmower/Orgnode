@@ -3,7 +3,7 @@ from setuptools import setup
 setup(
     name='Orgnode',
     version='1.0',
-    description='Mirror of Orgnode.',
+    description='Packaged version of Orgnode by Charles Cave.',
     url='https://github.com/cmower/Orgnode',
     author='Charles Cave',
     author_email='charlesweb@optusnet.com.au',
