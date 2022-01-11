@@ -303,6 +303,15 @@ class Orgnode(object):
         Set the scheduled date using the supplied date object
         """
         self.scheduled = dateval
+        dateval_str = dateval.strftime('%Y-%m-%d %a')
+        if 'SCHEDULED: <' in self.body:
+           idx_start = self.body.find('SCHEDULED: <')
+           idx_end = idx_start + self.body[idx_start:].find('>')
+           body_old = self.body
+           body_new = body_old[:idx_start+12] + dateval_str + body_old[idx_end:]
+           self.body = body_new
+        else:
+           self.body = 'SCHEDULED: <%s>\n' % dateval_str + self.body
 
     def Scheduled(self):
         """
@@ -315,6 +324,16 @@ class Orgnode(object):
         Set the deadline (due) date using the supplied date object
         """
         self.deadline = dateval
+        dateval_str = dateval.strftime('%Y-%m-%d %a')
+        if 'DEADLINE: <' in self.body:
+           idx_start = self.body.find('DEADLINE: <')
+           idx_end = idx_start + self.body[idx_start:].find('>')
+           body_old = self.body
+           body_new = body_old[:idx_start+11] + dateval_str + body_old[idx_end:]
+           self.body = body_new
+        else:
+           self.body = 'DEADLINE: <%s>\n' % dateval_str + self.body
+
 
     def Deadline(self):
         """
