@@ -63,6 +63,8 @@ def makelist(filename):
    nodelist      = []
    propdict      = dict()
 
+   in_src_block = False
+
    for line in f:
        ctr += 1
        hdng = re.search('^(\*+)\s(.*?)\s*$', line)
@@ -101,6 +103,14 @@ def makelist(filename):
                bodytext = bodytext + line
            elif line.startswith('#+'):
                bodytext = bodytext + line
+               if line.startswith('#+begin_src'):
+                  in_src_block = True
+               if line.startswith('#+end_src'):
+                  in_src_block = False
+
+           if (in_src_block and (line[:1] == '#')) and not (line.startswith('#+begin_src') or line.startswith('#+end_src')):
+               bodytext = bodytext + line
+
 
            if re.search(':PROPERTIES:', line): continue
            if re.search(':END:', line): continue
