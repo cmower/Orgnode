@@ -21,9 +21,17 @@
 #  SOFTWARE.
 
 # Program written by Charles Cave   (charlesweb@optusnet.com.au)
+# Program lightly maintained by Christopher E. Mower (c.mower@ed.ac.uk)
 # February - March 2009
 # Version 2 - June 2009
 #   Added support for all tags, TODO priority and checking existence of a tag
+# Version 3 - January 2022 (by C. E. Mower)
+#   Parsed main `orgnode.py` to Python 3
+#   Simple installation via pip, see below
+#   Several updates to Org-mode file parsing (see commits)
+#   Modified interface for `makelist` method:
+#     Before: nodelist = Orgnode.makelist(filename)
+#     Now: root, nodelist = Orgnode.makelist(filename) where root is a string containing everything before the first node
 # More information at
 #    http://members.optusnet.com.au/~charles57/GTD
 
