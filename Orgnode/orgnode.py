@@ -46,8 +46,8 @@ def makelist(filename):
    try:
       f = open(filename, 'r')
    except IOError:
-      print "Unable to open file [%s] " % filename
-      print "Program terminating."
+      print("Unable to open file [%s] " % filename)
+      print("Program terminating.")
       sys.exit(1)
 
    todos         = dict()  # populated from #+SEQ_TODO line
@@ -132,7 +132,7 @@ def makelist(filename):
        h = n.Heading()
        todoSrch = re.search('([A-Z]+)\s(.*?)$', h)
        if todoSrch:
-           if todos.has_key( todoSrch.group(1) ):
+           if todoSrch.group(1) in todos:
                n.setHeading( todoSrch.group(2) )
                n.setTodo ( todoSrch.group(1) )
        prtysrch = re.search('^\[\#(A|B|C)\] (.*?)$', n.Heading())
@@ -222,7 +222,7 @@ class Orgnode(object):
         Returns a list of all tags
         For example, :HOME:COMPUTER: would return ['HOME', 'COMPUTER']
         """
-        return self.tags.keys()
+        return list(self.tags.keys())
 
     def hasTag(self, srch):
         """
@@ -230,7 +230,7 @@ class Orgnode(object):
         For example, hasTag('COMPUTER') on headling containing
         :HOME:COMPUTER: would return True.
         """
-        return self.tags.has_key(srch)
+        return srch in self.tags
 
     def setTag(self, newtag):
         """
@@ -311,7 +311,7 @@ class Orgnode(object):
         n = n + self.headline
         n = "%-60s " % n     # hack - tags will start in column 62
         closecolon = ''
-        for t in self.tags.keys():
+        for t in list(self.tags.keys()):
            n = n + ':' + t
            closecolon = ':'
         n = n + closecolon
