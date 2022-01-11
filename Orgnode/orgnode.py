@@ -354,7 +354,8 @@ class Orgnode(object):
         if self.prty:
            n = n +  '[#' + self.prty + '] '
         n = n + self.headline
-        n = "%-60s " % n     # hack - tags will start in column 62
+        # n = "%-60s " % n     # hack - tags will start in column 62
+        n += ' '
         closecolon = ''
         for t in list(self.tags.keys()):
            n = n + ':' + t
