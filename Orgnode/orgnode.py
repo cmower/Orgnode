@@ -99,6 +99,8 @@ def makelist(filename):
 
            if line[:1] != '#':
                bodytext = bodytext + line
+           elif line.startswith('#+'):
+               bodytext = bodytext + line
 
            if re.search(':PROPERTIES:', line): continue
            if re.search(':END:', line): continue
