@@ -64,12 +64,16 @@ def makelist(filename):
    propdict      = dict()
 
    in_src_block = False
+   found_first_heading = False
+   root = ""
 
    for line in f:
        ctr += 1
        hdng = re.search('^(\*+)\s(.*?)\s*$', line)
        if hdng:
+          found_first_heading = True
           if heading:  # we are processing a heading line
+
              thisNode = Orgnode(level, heading, bodytext, tag1, alltags)
              if sched_date:
                 thisNode.setScheduled(sched_date)
@@ -128,6 +132,8 @@ def makelist(filename):
               deadline_date = datetime.date(int(dd_re.group(1)),
                                             int(dd_re.group(2)),
                                             int(dd_re.group(3)) )
+       if not found_first_heading:
+          root += line
 
    # write out last node
    thisNode = Orgnode(level, heading, bodytext, tag1, alltags)
@@ -152,7 +158,7 @@ def makelist(filename):
           n.setPriority(prtysrch.group(1))
           n.setHeading(prtysrch.group(2))
 
-   return nodelist
+   return root, nodelist
 
 ######################
 class Orgnode(object):
