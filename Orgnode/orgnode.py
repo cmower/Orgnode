@@ -346,23 +346,14 @@ class Orgnode(object):
         Print the level, heading text and tag of a node and the body
         text as used to construct the node.
         """
-        # This method is not completed yet.
-        n = ''
-        for i in range(0, self.level):
-           n = n + '*'
-        n = n + ' ' + self.todo + ' '
-        if self.prty:
-           n = n +  '[#' + self.prty + '] '
-        n = n + self.headline
-        # n = "%-60s " % n     # hack - tags will start in column 62
-        n += ' '
-        closecolon = ''
-        for t in list(self.tags.keys()):
-           n = n + ':' + t
-           closecolon = ':'
-        n = n + closecolon
-# Need to output Scheduled Date, Deadline Date, property tags The
-# following will output the text used to construct the object
-        n = n + "\n" + self.body
-
-        return n
+        out = ''
+        out += '*'*self.level + ' '
+        if self.todo != '':
+           out += self.todo + ' '
+        if self.prty != '':
+           out += '[#'  + self.prty + '] '
+        out += self.headline
+        if len(self.tags) > 0:
+           out += ' :' + ':'.join(self.tags.keys()) + ':'
+        out += '\n' + self.body
+        return out
