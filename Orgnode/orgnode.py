@@ -206,7 +206,7 @@ class Orgnode(object):
         """
         Change the heading to the supplied string
         """
-        self.headline = newhdng
+        self.headline = newhdng.lstrip(' ').rstrip(' ')  # remove preceding and trailing whitespace
 
     def Body(self):
         """
@@ -282,7 +282,7 @@ class Orgnode(object):
         """
         Set the value of the TODO tag to the supplied string
         """
-        self.todo = value
+        self.todo = value.lstrip(' ').rstrip(' ')  # remove preceding and trailing whitespace
 
     def setProperties(self, dictval):
         """
